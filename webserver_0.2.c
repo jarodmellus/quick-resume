@@ -46,8 +46,8 @@ int main(int argc, char **argv)
 		snprintf(rootDir, 256, "%s", ".");
 		break;
 	case 2:
-		//accept directory with or without tail 
-		//forward slash
+		// accept directory with or without tail
+		// forward slash
 		if (argv[1][strlen(argv[1]) - 1] == '/')
 		{
 			argv[1][strlen(argv[1]) - 1] = '\0';
@@ -125,7 +125,6 @@ void *handle_request(void *cli)
 	int segmentSize = 0;
 	int requestSize = 0;
 	int dirSize = 0;
-	int responseSize = 0;
 	int p;
 
 	while (1)
@@ -147,8 +146,10 @@ void *handle_request(void *cli)
 
 		char segment[SEGMENT_SIZE] = {0};
 		segmentSize = recv(client->acceptedSock, &segment, SEGMENT_SIZE, 0);
+
+		// strcat(request, segment);
+		memcpy(&request[requestSize], segment, segmentSize);
 		requestSize += segmentSize;
-		strcat(request, segment);
 	}
 
 	if (requestSize == 0)
@@ -198,7 +199,8 @@ void *handle_request(void *cli)
 			strcat(dir, parsedRequest[1]);
 		}
 
-		char response[MAX_REQUEST_SIZE] = {0};
+		char *response = malloc(0);
+		int responseSize = 0;
 
 		printf("File: %s\n", dir);
 
@@ -206,7 +208,10 @@ void *handle_request(void *cli)
 
 		if (file != NULL)
 		{
-			strcat(response, "HTTP/1.1 200 OK\n\n");
+			response = realloc(response, 18);
+			bzero(response, 18);
+			strcpy(response, "HTTP/1.1 200 OK\n\n");
+			responseSize = strlen(response) + 1;
 
 			if (fseek(file, 0, SEEK_END) < 0)
 			{
@@ -216,23 +221,36 @@ void *handle_request(void *cli)
 			int fileSize = ftell(file);
 
 			rewind(file);
-			int p = strlen(response);
-			fread(&response[p], 1, fileSize, file);
+			printf("%i %i\n", responseSize, fileSize);
+			char *buffer = malloc(fileSize);
+			bzero(buffer, fileSize);
+			int bufsize = fread(buffer, 1, fileSize, file);
+			responseSize += bufsize;
+			response = realloc(response, responseSize);
+			bzero(&response[responseSize-bufsize-1], bufsize);
+			printf("he??\n");
+			memcpy(&response[responseSize-bufsize-1], buffer, bufsize);
+			printf("what about here??\n");
+			free(buffer);
 			fclose(file);
 		}
 		else
 		{
 			printf("\033[0;31mCan't find file.\033[0;37m\n");
-			strcat(response, "HTTP/1.1 404 Not Found\n\n");
+			response = realloc(response, 25);
+			bzero(response, 25);
+			strcpy(response, "HTTP/1.1 404 Not Found\n\n");
 		}
 
 		printf("\n\033[1;34mResponse:\n\033[0;37m%s", response);
 
-		if (send(client->acceptedSock, response, strlen(response), 0) < 0)
+		if (send(client->acceptedSock, response, responseSize, 0) < 0)
 		{
 			perror("Send");
 			terminate(8);
 		}
+
+		free(response);
 
 		printf("\n\033[1;32mFinished.\033[0;37m\n");
 	}
