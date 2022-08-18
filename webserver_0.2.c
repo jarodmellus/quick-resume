@@ -204,14 +204,11 @@ void *handle_request(void *cli)
 
 		printf("File: %s\n", dir);
 
-		FILE *file = fopen(dir, "r");
+		FILE *file = fopen(dir, "r+");
 
 		if (file != NULL)
 		{
-			response = realloc(response, 18);
-			bzero(response, 18);
-			strcpy(response, "HTTP/1.1 200 OK\n\n");
-			responseSize = strlen(response) + 1;
+	
 
 			if (fseek(file, 0, SEEK_END) < 0)
 			{
@@ -220,17 +217,19 @@ void *handle_request(void *cli)
 
 			int fileSize = ftell(file);
 
+			response = realloc(response, 18);
+			bzero(response, 18);
+			strcpy(response, "HTTP/1.1 200 OK\n\n");
+			responseSize = strlen(response) + 1;
+
 			rewind(file);
-			printf("%i %i\n", responseSize, fileSize);
 			char *buffer = malloc(fileSize);
 			bzero(buffer, fileSize);
 			int bufsize = fread(buffer, 1, fileSize, file);
 			responseSize += bufsize;
 			response = realloc(response, responseSize);
 			bzero(&response[responseSize-bufsize-1], bufsize);
-			printf("he??\n");
 			memcpy(&response[responseSize-bufsize-1], buffer, bufsize);
-			printf("what about here??\n");
 			free(buffer);
 			fclose(file);
 		}
