@@ -14,7 +14,7 @@
 #define MAX_CONNECTIONS 12
 #define MAX_REQUEST_SIZE 8192
 #define SEGMENT_SIZE 0x100
-#define MAX_LOAD_TIME 1000
+#define MAX_LOAD_TIME 500
 
 // Credit to Dr. Brian Stuart's chat server example
 // For this Client struct technique
@@ -190,12 +190,15 @@ void *handle_request(void *cli)
 		char dir[256] = {0};
 		strcpy(dir, rootDir);
 		strcat(dir, parsedRequest[1]);
+		/*
 		struct stat path_stat;
 		stat(dir, &path_stat);
-		int s;
-		if((s=S_ISREG(path_stat.st_mode))==0) { //check if file is directory
+		int s = S_ISDIR(path_stat.st_mode);
+		if(s==0) { //check if file is directory
+		printf("%i -> %s\n", s,dir);
 			strcat(dir, "/");
 		}
+		*/
 
 		if (dir[strlen(dir) - 1] == '/')
 		{
