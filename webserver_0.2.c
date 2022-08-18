@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <poll.h>
+#include <sys/stat.h>
 
 #define DEFAULT_PORT 10074
 #define MAX_CONNECTIONS 12
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
 		}
 
 		snprintf(rootDir, 256, "%s%s", "", argv[1]);
-		printf("%s\n", rootDir);
+		printf("Root: %s\n", rootDir);
 		break;
 	default:
 		printf("Ignoring extra arguments.\n");
@@ -188,15 +189,17 @@ void *handle_request(void *cli)
 
 		char dir[256] = {0};
 		strcpy(dir, rootDir);
-
-		if (parsedRequest[1][strlen(parsedRequest[1]) - 1] == '/')
-		{
-			strcat(dir, parsedRequest[1]);
-			strcat(dir, "index.html");
+		strcat(dir, parsedRequest[1]);
+		struct stat path_stat;
+		stat(dir, &path_stat);
+		int s;
+		if((s=S_ISREG(path_stat.st_mode))==0) { //check if file is directory
+			strcat(dir, "/");
 		}
-		else
+
+		if (dir[strlen(dir) - 1] == '/')
 		{
-			strcat(dir, parsedRequest[1]);
+			strcat(dir, "index.html");
 		}
 
 		char *response = malloc(0);
@@ -206,10 +209,9 @@ void *handle_request(void *cli)
 
 		FILE *file = fopen(dir, "r+");
 
+
 		if (file != NULL)
 		{
-	
-
 			if (fseek(file, 0, SEEK_END) < 0)
 			{
 				perror("fseek");
@@ -223,13 +225,13 @@ void *handle_request(void *cli)
 			responseSize = strlen(response) + 1;
 
 			rewind(file);
-			char *buffer = malloc(fileSize);
-			bzero(buffer, fileSize);
+			char *buffer = malloc(fileSize+1);
+			bzero(buffer, fileSize+1);
 			int bufsize = fread(buffer, 1, fileSize, file);
 			responseSize += bufsize;
 			response = realloc(response, responseSize);
-			bzero(&response[responseSize-bufsize-1], bufsize);
-			memcpy(&response[responseSize-bufsize-1], buffer, bufsize);
+			bzero(&response[responseSize-bufsize-1], bufsize+1);
+			memcpy(&response[responseSize-bufsize-1], buffer, bufsize+1);
 			free(buffer);
 			fclose(file);
 		}
