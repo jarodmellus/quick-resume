@@ -24,5 +24,3 @@ function SelectResume(id) {
 
 window.OpenResumeBuilder = OpenResumeBuilder;
 window.CreateNewResume = CreateNewResume;
-
-

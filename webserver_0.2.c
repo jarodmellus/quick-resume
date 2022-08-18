@@ -228,6 +228,7 @@ void *handle_request(void *cli)
 			char *buffer = malloc(fileSize+1);
 			bzero(buffer, fileSize+1);
 			int bufsize = fread(buffer, 1, fileSize, file);
+			printf("bufs %i files%i\n",bufsize,fileSize);
 			responseSize += bufsize;
 			response = realloc(response, responseSize);
 			bzero(&response[responseSize-bufsize-1], bufsize+1);
@@ -245,7 +246,7 @@ void *handle_request(void *cli)
 
 		printf("\n\033[1;34mResponse:\n\033[0;37m%s", response);
 
-		if (send(client->acceptedSock, response, responseSize, 0) < 0)
+		if (send(client->acceptedSock, response, responseSize-1, 0) < 0)
 		{
 			perror("Send");
 			terminate(8);
