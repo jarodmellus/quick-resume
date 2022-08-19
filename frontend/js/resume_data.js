@@ -1,7 +1,7 @@
 const Resume = () => {
     return {
         data : {
-            name : "",
+            resume_id : "",
             style : Style(),
         },
         content : {
@@ -12,7 +12,7 @@ const Resume = () => {
                 suffix: "",
             },
             contact : {
-                telephone : "",
+                phone : "",
                 email : "",
                 website : "",
                 address : {

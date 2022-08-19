@@ -26,7 +26,8 @@ const DrawResume = () => {
     var preview = document.getElementById("preview");
     var res = workingResume.content;
     //filter out sections that do not need to be redrawn
-    res.filter((value, key)=>{return changed[key]}).forEach((value, key) => {
+    //console.log("res:",res);
+    Object.keys(res).filter((value, key)=>{return changed[key]}).forEach((value, key) => {
         if(!changed[key]) {
             return;
         }
@@ -78,19 +79,115 @@ const DrawResume = () => {
         }
         changed[key]=false;
     })
-
 }
 
 window.onload = () => {
-    console.log("hello?");
-    workingResume = localStorage.getItem("workingResume")
+    workingResume = localStorage.getItem("workingResume");
     if(workingResume == null) {
         console.log("No resume in localStorage to be used as working resume...");
         workingResume=Resume();
-        return;
     }
+
     UpdateResume();
+    console.log("Page Loaded.");
 }
+
+document.getElementById('editor-form').addEventListener('input', (event) => {
+    console.log("test",workingResume["content.name"]);
+    //console.log("hehe ",searchById(workingResume.content, event.target.getAttribute('id')));
+    var id = event.target.getAttribute('id');
+    //searchById(workingResume.content,id,v) 
+    //workingResume.filter((key,value) => {
+    //    if(key==id) return value;
+    //}) = "halleluiaia"
+    var fields = findKey(workingResume.content,event.target.getAttribute('id'),"");
+    console.log("fields",fields);
+    workingResume=setNestedPropertyValue(workingResume,"content" + fields,event.target.value);
+    console.log("hello??",event.target.value)
+
+
+    console.log("workingResume",workingResume);
+
+    UpdateResume();
+    
+});
+
+function setNestedPropertyValue(obj, fields, val)
+{
+    console.log("final fields",fields);
+    fields = fields.split('.');
+
+    var cur = obj,
+    last = fields.pop();
+
+    fields.forEach(function(field) {
+        cur = cur[field];
+    });
+
+    console.log("last",last);
+
+    if(cur[last]===null) {
+        throw ("Search could not find object with key: " + last);
+    }
+
+    
+    if(Array.isArray(cur[last])) {
+        console.log("helo????? jello>");
+        cur[last].append(val);
+    }
+    else {
+        console.log("no jelloo.....");
+        cur[last] = val;
+    }
+
+    return obj;
+}
+
+function findKey(tree, seeking, keySoFar) {
+    console.log(tree);
+    var keys = Object.keys(tree);
+    for(var i = 0; i<keys.length; i++) {
+        var key = keys[i];
+        var obj = tree[key];
+        console.log("key seeking",key,seeking);
+        if(key==seeking) {
+            console.log("HIIIII!!!!");
+            return keySoFar + "." + key;
+        } 
+        
+        if(obj===null) continue;
+        
+        var retkey = findKey(obj,seeking,keySoFar + "." + key); 
+        if(retkey!=null) {
+            return retkey;
+        } 
+    } 
+    return null;
+}
+
+/*
+
+
+function searchById(tree, id, ret) {
+    var keys = Object.keys(tree);
+    for(var i = 0; i<keys.length; i++) {
+        var key = keys[i];
+        var obj = tree[key];
+        console.log(key);
+        if(key==id) {
+            ret=obj;
+            return obj;
+        } 
+        
+        if(obj===null) continue;
+        
+        var child = searchById(obj,id); 
+        if(child!==null && child!==undefined) {
+            return child;
+        } 
+    }
+}
+*/
 
 function ResumeToJson(resume) {
     return JSON.stringify(resume);
@@ -107,31 +204,5 @@ function SaveResume() {
 function AutoSave() {
 
 }
-
-document.getElementById('editor-form').addEventListener('input', (event) => {
-    console.log(event);
-    console.log(workingResume);
-    searchById(workingResume,event.target.getAttribute('id')) = event.target.value;
-    UpdateResume();
-    console.log("hey?");
-});
-
-//https://stackoverflow.com/questions/52066403/recursive-tree-search-in-a-nested-object-structure-in-javascript
-const searchById = (tree, id) => {
-    if (id===(Object.keys(tree)[0])) {
-        return tree.label;
-    }
-    
-    var children = Object.values(tree);
-    for(var child in children) {
-        if(!(typeof child === 'object' && yourVariable !== null)) continue;
-
-        const found = searchById(child, id);
-      
-        if (found) {
-        return Object.values(found)[0];
-        }
-    }
-};
 
 onchange = (event) => { };
