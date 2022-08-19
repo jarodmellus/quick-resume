@@ -1,11 +1,87 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="module" src="../js/resources.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script type="module" src="../js/resume_data.js"></script>
+    <script type="module" src="../js/resume_components.js"></script>
     <script type="module" src="../js/builder.js"></script>
   </head>
 
   <body>
+    <div id = "editor">
+      <h1>Resume Builder</h1>
+      <form id="editor-form">
+        <h2>Name</h2>
+          <label for="first-name">First name:</label><br>
+          <input type="text" id="first-name" name="first-name"><br>
+
+          <label for="first">Middle name:</label><br>
+          <input type="text" id="middle-name" name="middle-name"><br>
+
+          <label for="last-name">Last name:</label><br>
+          <input type="text" id="last-name" name="last-name"><br>
+
+          <label for="name-suffix">Suffix:</label><br>
+          <input type="text" id="name-suffix" name="name-suffix"><br>
+        <h2>Contact Info</h2>
+          <label for="phone">Phone:</label><br>
+          <input type="text" id="phone" name="phone"><br> 
+
+          <label for="email">Email:</label><br>
+          <input type="text" id="email" name="email"><br> 
+          <h3>Address</h3>
+            <label for="street">Street:</label><br>
+            <input type="text" id="street" name="street"><br> 
+
+            <label for="state">State:</label><br>
+            <input type="text" id="state" name="state"><br> 
+
+            <label for="state">City:</label><br>
+            <input type="text" id="city" name="city"><br> 
+
+            <label for="zipcode">Zipcode:</label><br>
+            <input type="text" id="zipcode" name="zipcode"><br> 
+          <h2>Objective</h2>
+            <label for="objective">Objective:</label><br>
+            <input type="text" id="objective" name="objective"><br> 
+          <h2>Experiences</h2>
+            <!--<label for="street">Objective:</label><br>
+            <input type="text" id="experience" name="objective"><br> -->
+          <h2>Education<h2>
+          <h2>Skills<h2>  
+          <h2>Awards<h2>
+          <h2>Hobbies<h2>  
+
+      </form>
+      
+    </div>
+    <div id= "preview">
+
+      <h1 id="name"></h1>
+
+      <div id="contact">
+      </div>
+      <div id="objective">
+        <p></p>
+      </div>
+      <div id="experiences">
+        <p></p>
+      </div>
+      <div id="educations">
+        <p></p>
+      </div>
+      <div id="skills">
+        <p></p>
+      </div>
+      <div id="awards">
+        <p></p>
+      </div>
+      <div id="hobbies">
+        <p></p>
+      </div>
+      
+      
+    </div>
     
   </body>
 </html>

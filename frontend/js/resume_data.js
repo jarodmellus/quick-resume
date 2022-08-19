@@ -11,8 +11,7 @@ const Resume = () => {
                 last: "",
                 suffix: "",
             },
-            objective:"",
-            contact_section : {
+            contact : {
                 telephone : "",
                 email : "",
                 website : "",
@@ -23,10 +22,11 @@ const Resume = () => {
                     zipcode : "",
                 }
             },
+            objective: "",
             experiences : [],
             educations : [],
             skills : [],
-            awards_accomplishments : [],
+            awards : [],
             hobbies : []
         }
     }

@@ -1,4 +1,4 @@
-import {Resume,Education,Experience} from './resources.js';
+import {Resume,Education,Experience} from './resume_data.js';
 
 let id = "example";
 let totalResumes = 0;

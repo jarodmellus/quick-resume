@@ -215,19 +215,34 @@ void *handle_request(void *cli)
 
 		if (file != NULL)
 		{
+			response = realloc(response, 18);
+			bzero(response, 18);
+			strcpy(response, "HTTP/1.1 200 OK\n");
+			responseSize = strlen(response) + 1;
+
+
+			//specify content type using extension
+			char extension[32] = {0};
+			strcpy(extension, strrchr(dir,'.')+1);
+			printf("Extension: %s\n",extension);
+
+			if(strcmp(extension,"js")==0) {
+				responseSize+=38-1;
+				response=realloc(response,responseSize);
+				strcat(response,"Content-Type: application/javascript\n");
+			}
+
+			response=realloc(response,++responseSize);
+			strcat(response,"\n");
+
 			if (fseek(file, 0, SEEK_END) < 0)
 			{
 				perror("fseek");
 			}
 
 			int fileSize = ftell(file);
-
-			response = realloc(response, 18);
-			bzero(response, 18);
-			strcpy(response, "HTTP/1.1 200 OK\n\n");
-			responseSize = strlen(response) + 1;
-
 			rewind(file);
+			
 			char *buffer = malloc(fileSize+1);
 			bzero(buffer, fileSize+1);
 			int bufsize = fread(buffer, 1, fileSize, file);
