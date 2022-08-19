@@ -51,7 +51,7 @@ img.avatar {
   border-radius: 50%;
 }
 
-.container {
+.button_container {
   padding: 16px;
 }
 
@@ -124,4 +124,8 @@ span.psw {
   .cancelbtn {
      width: 100%;
   }
+}
+
+h2 {
+  text-align: center;
 }
