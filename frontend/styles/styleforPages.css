@@ -1,0 +1,39 @@
+header {
+    background: #07294D;
+}
+.navbar-brand {
+    font-family: "cambria";
+    font-size: 35; 
+}
+.nav-link {
+    font-family: "arial";
+}
+html body {
+    background: #FFC600;
+}
+body {
+    font-family: "consolas";
+    font-size: 1rem;
+}
+
+.navbar-expand-md .navbar-nav .nav-link {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.content {
+    padding: 2rem 1.5rem;
+}
+
+.jumbotron-heading{
+    /* padding: 1.5rem; */
+    background: 0;
+}
+
+.jumbotron img {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.blockquote-footer {
+    background: 0;
+}
