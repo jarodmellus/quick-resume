@@ -52,81 +52,91 @@
     </div>
 </header>
 <body>
+    <section class="jumbotron text-center">
+        <h1 class="jumbotron-heading">Resume Template</h1>
+        <p class="lead text-muted">Fill out the form below</p>
 
-    <div id = "editor">
-      <h1>Resume Builder</h1>
-      <form id="editor-form">
-        <h2>Name</h2>
-          <label for="first">First name:</label><br>
-          <input type="text" id="first" name="first"><br>
+        <div class="col-sm-4 col-md-4" id="editor"> 
+            <form>
+                <label for="personalinfo">Personal Information</label>
+                <div id="personalinfo" class="form-row">
+                  <div class="form-group col-md-6">
+                    <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                  </div>
+                </div>
 
-          <label for="middle">Middle name:</label><br>
-          <input type="text" id="middle" name="middle"><br>
+                <label for="contactinfo">Contact Information</label>
+                <div id="contactinfo">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="address" placeholder="Address">
+                      </div>
+                    <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <input type="text" class="form-control" id="city" placeholder="City">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <input type="text" class="form-control" id="state" placeholder="State">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <input type="text" class="form-control" id="zipcode" placeholder="Zip" >
+                    </div>
+                    </div>
+                </div>
 
-          <label for="last">Last name:</label><br>
-          <input type="text" id="last" name="last"><br>
+                <label for="objective">Objective</label>
+                <div id="objective">
+                    <div class="form-group">
+                        <textarea class="form-control" aria-label="" id="objectiveContent" >Write Here</textarea> 
+                    </div>
+                </div>
 
-          <label for="suffix">Suffix:</label><br>
-          <input type="text" id="suffix" name="suffix"><br>
-        <h2>Contact Info</h2>
-          <label for="phone">Phone:</label><br>
-          <input type="text" id="phone" name="phone"><br> 
+                <label for="experience">Experience</label>
+                <div id="experience">
+                    <div class="form-group">
+                        <textarea class="form-control" aria-label="" id="experienceContent">Write Here</textarea> 
+                    </div>
+                </div>
 
-          <label for="email">Email:</label><br>
-          <input type="text" id="email" name="email"><br> 
-          <h3>Address</h3>
-            <label for="street">Street:</label><br>
-            <input type="text" id="street" name="street"><br> 
+                <label for="education">Education</label>
+                <div id="education">
+                    <div class="form-group">
+                        <textarea class="form-control" aria-label="" id="educationContent">Write Here</textarea> 
+                    </div>
+                </div>
 
-            <label for="state">State:</label><br>
-            <input type="text" id="state" name="state"><br> 
+                <label for="skills">Skills</label>
+                <div id="skills">
+                    <div class="form-group">
+                        <textarea class="form-control" aria-label="" id="skillsContent">Write Here</textarea> 
+                    </div>
+                </div>
 
-            <label for="state">City:</label><br>
-            <input type="text" id="city" name="city"><br> 
+                <label for="awards">Awards</label>
+                <div id="awards">
+                    <div class="form-group">
+                        <textarea class="form-control" aria-label="" id="awardsContent">Write Here</textarea> 
+                    </div>
+                </div>
 
-            <label for="zipcode">Zipcode:</label><br>
-            <input type="text" id="zipcode" name="zipcode"><br> 
-          <h2>Objective</h2>
-            <label for="objective">Objective:</label><br>
-            <input type="text" id="objective" name="objective"><br> 
-          <h2>Experiences</h2>
-            <!--<label for="street">Objective:</label><br>
-            <input type="text" id="experience" name="objective"><br> -->
-          <h2>Education<h2>
-          <h2>Skills<h2>  
-          <h2>Awards<h2>
-          <h2>Hobbies<h2>  
+              </form>
+        </div>
 
-      </form>
-      
-    </div>
-    <div id= "preview">
+        <div class="col-sm-6 col-md-6" id="preview">
+                <!-- put the template preview here-->
+        </div>
 
-      <h1 id="name"></h1>
+            
 
-      <div id="contact">
-      </div>
-      <div id="objective">
-        <p></p>
-      </div>
-      <div id="experiences">
-        <p></p>
-      </div>
-      <div id="educations">
-        <p></p>
-      </div>
-      <div id="skills">
-        <p></p>
-      </div>
-      <div id="awards">
-        <p></p>
-      </div>
-      <div id="hobbies">
-        <p></p>
-      </div>
-      
-      
-    </div>
+    </section>
     
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
