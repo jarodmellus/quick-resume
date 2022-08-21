@@ -4,13 +4,49 @@ import * as Components from './resume_components.js';
 let workingResume = null;
 let changed = {
     name:true,
+        firstName:true,
+        middleName:true,
+        lastName:true,
+        suffix:true,
+
     contact:true,
-    objective:true,
-    experiences:true,
-    educations:true,
-    skills:true,
-    awards:true,
-    hobbies:true,
+        phoneNumber:true,
+        email:true,
+        website:true,
+        address:true,
+            street:true,
+            state:true,
+            city:true,
+            zipcode:true,
+
+    objectiveContent:true,
+    experienceContent:true,
+    educationsContent:true,
+    skillsContent:true,
+    awardsContent:true
+}
+let paths = {
+    name:"content.name",
+        firstName:"content.name.firstName",
+        middleName:"content.name.middleName",
+        lastName:"content.name.lastName",
+        suffix:"content.name.suffix",
+
+    contact:"content.contact",
+        phoneNumber:"content.contact.phoneNumber",
+        email:"content.contact.email",
+        website:"content.contact.website",
+        address:"content.contact.address",
+            street:"content.contact.street",
+            state:"content.contact.state",
+            city:"content.contact.city",
+            zipcode:"content.contact.zipcode",
+
+    objectiveContent:"content.objectiveContent",
+    experienceContent:"content.experienceContent",
+    educationContent:"content.educationContent",
+    skillsContent:"content.skillsContent",
+    awardsContent:"content.awardsContent"
 }
 let header_names = {
     "skills":"Skills",
@@ -25,32 +61,35 @@ const UpdateResume = () => {
 
 //change the DOM to reflect the working resume object
 const DrawResume = () => {
-    var preview = document.getElementById("preview");
-    workingResume;
-
+    
     //1) filter out sections that do not need to be redrawn
     //2) map the the path to each object to a list
-    var changedKeys = Object.keys(workingResume.content).filter((key)=>{if (changed[key]) return key})
+    var changedKeys = Object.keys(changed).filter((key)=>{
+        if (changed[key]) return key
+    })
+
+/*
 
     var paths=RecursiveKeys([], changedKeys, workingResume.content, "");
-  
+    */
 
-    paths.forEach((path) => {
-        console.log("path",path);
-        console.lo
+    Object.entries(paths).forEach(([key,value]) => {
+        var path=value;
         if(path===null || path===undefined) return;
         var s = path.split(".");
         var key=s[s.length-1];
-        console.log(key);
         if(key===null || path===undefined) return;
         var elem = document.getElementById("preview_" + key); 
         if(elem===null || path===undefined) {
-            document.getElementById("preview").appendChild(document.createElement("div")).setAttribute("id","preview_"+key);
+            document.getElementById("preview").appendChild(document.createElement("div"))
+            .setAttribute("id","preview_"+key);
+
             elem = document.getElementById("preview_" + key);
         }
         elem = document.getElementById("preview_" + key);
-        console.log("Elem",elem);
-        elem.innerHTML = getNestedPropertyValue(workingResume,"content" + path);
+        console.log("value",typeof getNestedPropertyValue(workingResume,path))
+        elem.textContent = getNestedPropertyValue(workingResume,path);
+        console.log(elem.innerHTML);
     })  
 }
 
@@ -66,9 +105,8 @@ window.onload = () => {
 }
 
 document.getElementById('editor-form').addEventListener('input', (event) => {
-    var id = event.target.getAttribute('id');
-    var fields = findKey(workingResume.content,event.target.getAttribute('id'),"");
-    workingResume=setNestedPropertyValue(workingResume,"content" + fields,event.target.value);
+    //var fields = findKey(workingResume.content,event.target.getAttribute('id'),"");
+    workingResume=setNestedPropertyValue(workingResume,paths[workingResume.content,event.target.getAttribute('id')],event.target.value);
     //changed.setNestedPropertyValue
 
     UpdateResume();
@@ -97,7 +135,8 @@ function setNestedPropertyValue(obj, fields, val)
     }
     
     if(Array.isArray(cur[last])) {
-        cur[last].append(val);
+        console.log("cur[last]",cur[last]);
+        cur[last].push(val);
     }
     else {
         cur[last] = val;
@@ -130,7 +169,7 @@ function findKey(tree, seeking, keySoFar) {
         var obj = tree[key];
         if(key==seeking) return keySoFar + "." + key;
         
-        if(obj===null) continue;
+        if(obj===null || obj===undefined) continue;
         
         var retkey = findKey(obj,seeking,keySoFar + "." + key); 
         if(retkey!=null) return retkey;
@@ -141,7 +180,6 @@ function findKey(tree, seeking, keySoFar) {
 
 //returns a flattened array of all keys in object tree structure
 const RecursiveKeys = (paths, keys, obj, keySoFar) => {
-    
     for(var i = 0; i < keys.length; i++) {
         var key = keys[i];
         if(key==0) throw "key is bad"
