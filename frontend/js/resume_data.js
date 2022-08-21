@@ -6,13 +6,13 @@ const Resume = () => {
         },
         content : {
             name : {
-                first: "",
-                middle: "",
-                last: "",
+                firstName: "",
+                middleName: "",
+                lastName: "",
                 suffix: "",
             },
             contact : {
-                phone : "",
+                phoneNumber : "",
                 email : "",
                 website : "",
                 address : {
@@ -22,12 +22,11 @@ const Resume = () => {
                     zipcode : "",
                 }
             },
-            objective: "",
-            experiences : [],
-            educations : [],
-            skills : [],
-            awards : [],
-            hobbies : []
+            objectiveContent: "",
+            experienceContent : [],
+            educationContent : [],
+            skillsContent : [],
+            awardsContent : []
         }
     }
 }

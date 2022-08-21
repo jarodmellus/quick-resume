@@ -26,22 +26,33 @@ const UpdateResume = () => {
 //change the DOM to reflect the working resume object
 const DrawResume = () => {
     var preview = document.getElementById("preview");
-    var res = workingResume;
+    workingResume;
 
     //1) filter out sections that do not need to be redrawn
     //2) map the the path to each object to a list
-    var changedKeys = Object.keys(res.content).filter((key)=>{if (changed[key]) return key})
-    console.log("changedKeys",changedKeys);
+    var changedKeys = Object.keys(workingResume.content).filter((key)=>{if (changed[key]) return key})
 
-    var paths=RecursiveKeys([], changedKeys, res, "");
-    console.log("paths",paths);
+    var paths=RecursiveKeys([], changedKeys, workingResume.content, "");
+  
 
     paths.forEach((path) => {
-        var key = path.split(".")[path.length-1];
-        document.getElementById(key).innerHTML = getNestedPropertyValue(res,"content" + path);
+        console.log("path",path);
+        console.lo
+        if(path===null || path===undefined) return;
+        var s = path.split(".");
+        var key=s[s.length-1];
+        console.log(key);
+        if(key===null || path===undefined) return;
+        var elem = document.getElementById("preview_" + key); 
+        if(elem===null || path===undefined) {
+            document.getElementById("preview").appendChild(document.createElement("div")).setAttribute("id","preview_"+key);
+            elem = document.getElementById("preview_" + key);
+        }
+        elem = document.getElementById("preview_" + key);
+        console.log("Elem",elem);
+        elem.innerHTML = getNestedPropertyValue(workingResume,"content" + path);
     })  
 }
-
 
 window.onload = () => {
     workingResume = localStorage.getItem("workingResume");
@@ -55,12 +66,10 @@ window.onload = () => {
 }
 
 document.getElementById('editor-form').addEventListener('input', (event) => {
-    console.log("test",workingResume["content.name"]);
     var id = event.target.getAttribute('id');
     var fields = findKey(workingResume.content,event.target.getAttribute('id'),"");
     workingResume=setNestedPropertyValue(workingResume,"content" + fields,event.target.value);
     //changed.setNestedPropertyValue
-    console.log("workingResume",workingResume);
 
     UpdateResume();
     
@@ -68,7 +77,11 @@ document.getElementById('editor-form').addEventListener('input', (event) => {
 
 function setNestedPropertyValue(obj, fields, val)
 {
-    console.log("final fields",fields);
+    if(fields.length==0) {
+
+    }
+
+   
     fields = fields.split('.');
 
     var cur = obj,
@@ -78,12 +91,10 @@ function setNestedPropertyValue(obj, fields, val)
         cur = cur[field];
     });
 
-    console.log("last",last);
 
     if(cur[last]===null) {
         throw ("Search could not find object with key: " + last);
     }
-
     
     if(Array.isArray(cur[last])) {
         cur[last].append(val);
@@ -97,7 +108,6 @@ function setNestedPropertyValue(obj, fields, val)
 
 function getNestedPropertyValue(obj, fields)
 {
-    console.log("final fields",fields);
     fields = fields.split('.');
 
     var cur = obj,
@@ -106,8 +116,6 @@ function getNestedPropertyValue(obj, fields)
     fields.forEach(function(field) {
         cur = cur[field];
     });
-
-    console.log("last",last);
 
     if(cur[last]===null) {
         throw ("Search could not find object with key: " + last);
@@ -128,21 +136,23 @@ function findKey(tree, seeking, keySoFar) {
         if(retkey!=null) return retkey;
         
     } 
-    return null;
+    //return null;
 }
 
 //returns a flattened array of all keys in object tree structure
 const RecursiveKeys = (paths, keys, obj, keySoFar) => {
+    
     for(var i = 0; i < keys.length; i++) {
         var key = keys[i];
         if(key==0) throw "key is bad"
-        console.log(key);
         var cur = obj[key];
         if(cur===null || cur === undefined) continue;
     
-        paths.push( findKey( cur, RecursiveKeys(paths, Object.keys(cur), cur, keySoFar+"."+key)),  keySoFar + "." + key);
+        //var newPath = findKey( cur, RecursiveKeys(paths, Object.keys(cur), cur, keySoFar+"."+key)
+        paths.push( findKey( cur, RecursiveKeys(paths, Object.keys(cur), cur, keySoFar+"."+key)),  keySoFar + "." + key);    
     }
-    return paths;
+
+    if(paths!==null && paths!==undefined) return paths;
 }
 
 function ResumeToJson(resume) {
@@ -162,3 +172,25 @@ function AutoSave() {
 }
 
 onchange = (event) => { }
+
+$("#btn-save").click( function() {
+    var text = $("#textarea").val();
+    var filename = $("#input-fileName").val()
+    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, filename+".txt");
+  });
+/*
+function blob_test() {
+    var text = test//$("#textarea").val();
+    var filename = $("#input-fileName").val()
+    var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, filename+".txt");
+  }
+*/
+
+
+/*
+  var data = new FormData();
+  data.append("upfile", new Blob(["CONTENT"], {type: "text/plain"}));
+  fetch("SERVER.SCRIPT", { method: "POST", body: data });
+  */
