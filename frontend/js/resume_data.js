@@ -1,3 +1,18 @@
+const Education = () => {
+    return {
+        school_name:"",
+        school_state:"",
+        school_start_month:"",
+        school_end_month:"",
+        school_start_year:"",
+        school_end_year:"",
+        school_city:"",
+        school_state:"",
+        gpa:"",
+        degrees: [],
+    }
+}
+
 const Resume = () => {
     return {
         data : {
@@ -24,7 +39,18 @@ const Resume = () => {
             },
             objectiveContent: "",
             experienceContent : [],
-            educationContent : [],
+            educationContent : {      
+                school_name:"",
+                school_state:"",
+                school_start_month:"",
+                school_end_month:"",
+                school_start_year:"",
+                school_end_year:"",
+                school_city:"",
+                school_state:"",
+                gpa:"",
+                degrees: [],
+            },
             skillsContent : [],
             awardsContent : []
         }
@@ -43,21 +69,6 @@ const Experience = () => {
         city:"",
         state:"",
         responsiblities:[]
-    }
-}
-
-const Education = () => {
-    return {
-        school_name:"",
-        degrees: [],
-        state:"",
-        start_month:"",
-        end_month:"",
-        start_year:"",
-        end_year:"",
-        city:"",
-        state:"",
-        gpa:""
     }
 }
 

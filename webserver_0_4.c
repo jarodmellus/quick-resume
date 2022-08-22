@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 
 	while (1)
 	{
-		if (listen(sock, MAX_CONNECTIONS) < 0)
+		if (listen(sock, SOMAXCONN) < 0)
 		{
 			perror("Listen");
 			terminate(3);
@@ -274,6 +274,7 @@ void *handle_request(void *cli)
 		printf("\n\033[1;32mFinished.\033[0;37m\n");
 	}
 
+	pthread_cancel(client->thread);
 	if (client->prev != NULL)
 		client->prev->next = client->next;
 	if (client->next != NULL)
@@ -281,6 +282,7 @@ void *handle_request(void *cli)
 
 	shutdown(client->acceptedSock, SHUT_RDWR);
 	free(client);
+	
 	fflush(stdin);
 }
 
