@@ -3,27 +3,47 @@ import * as Components from './resume_components.js';
 
 let workingResume = null;
 let changed = {
-    name:true,
-        firstName:true,
-        middleName:true,
-        lastName:true,
+    name:false,
+        firstName:false,
+        middleName:false,
+        lastName:false,
         suffix:true,
 
-    contact:true,
-        phoneNumber:true,
-        email:true,
-        website:true,
-        address:true,
-            street:true,
-            state:true,
-            city:true,
-            zipcode:true,
+    contact:false,
+        phoneNumber:false,
+        email:false,
+        website:false,
+        address:false,
+            street:false,
+            state:false,
+            city:false,
+            zipcode:false,
 
-    objectiveContent:true,
-    experienceContent:true,
-    educationsContent:true,
-    skillsContent:true,
-    awardsContent:true
+    objectiveContent:false,
+    experienceContent:false,
+        job_title:false,
+        company:false,
+        state:false,
+        start_month:false,
+        end_month:false,
+        start_year:false,
+        end_year:false,
+        city:false,
+        state:false,
+        responsiblities:false,
+    educationsContent:false,
+        school_name:false,
+        school_state:false,
+        school_start_month:false,
+        school_end_month:false,
+        school_start_year:false,
+        school_end_year:false,
+        school_city:false,
+        school_state:false,
+        gpa:false,
+        degrees:false,
+    skillsContent:false,
+    awardsContent:false
 }
 let paths = {
     name:"content.name",
@@ -45,19 +65,23 @@ let paths = {
     objectiveContent:"content.objectiveContent",
     experienceContent:"content.experienceContent",
     educationContent:"content.educationContent",
+        school_name:"content.educationContent.school_name",
+        school_state:"content.educationContent.school_state",
+        school_start_month:"content.educationContent.school_start_month",
+        school_end_month:"content.educationContent.school_end_month",
+        school_start_year:"content.educationContent.school_start_year",
+        school_end_year:"content.educationContent.school_end_year",
+        school_city:"content.educationContent.school_city",
+        school_state:"content.educationContent.school_state",
+        gpa:"content.educationContent.gpa",
+        degrees:"content.educationContent.degrees",
     skillsContent:"content.skillsContent",
     awardsContent:"content.awardsContent"
-}
-let header_names = {
-    "skills":"Skills",
-    "awards":"Awards & Accomplishments",
-    "hobbies":"Hobbies",
 }
 
 const UpdateResume = () => {
     DrawResume();
 }
-
 
 //change the DOM to reflect the working resume object
 const DrawResume = () => {
@@ -68,28 +92,31 @@ const DrawResume = () => {
         if (changed[key]) return key
     })
 
-/*
-
-    var paths=RecursiveKeys([], changedKeys, workingResume.content, "");
-    */
-
     Object.entries(paths).forEach(([key,value]) => {
         var path=value;
         if(path===null || path===undefined) return;
         var s = path.split(".");
         var key=s[s.length-1];
         if(key===null || path===undefined) return;
-        var elem = document.getElementById("preview_" + key); 
-        if(elem===null || path===undefined) {
-            document.getElementById("preview").appendChild(document.createElement("div"))
-            .setAttribute("id","preview_"+key);
 
-            elem = document.getElementById("preview_" + key);
+        
+        switch(key) {
+            case "name":
+            case "contact":
+            case "address":
+                return;
+            //case "lastName":    
+            //    break;
         }
-        elem = document.getElementById("preview_" + key);
-        console.log("value",typeof getNestedPropertyValue(workingResume,path))
-        elem.textContent = getNestedPropertyValue(workingResume,path);
-        console.log(elem.innerHTML);
+        
+
+
+        document.getElementById("preview_" + key).innerHTML = getNestedPropertyValue(workingResume,path);
+        //console.log("value",typeof getNestedPropertyValue(workingResume,path))
+        //elem.textContent = getNestedPropertyValue(workingResume,path);
+        //console.log(elem.innerHTML);
+        changed[key]=false;
+        
     })  
 }
 
@@ -100,14 +127,16 @@ window.onload = () => {
         workingResume=Resume();
     }
 
-    UpdateResume();
+   // UpdateResume();
     console.log("Page Loaded.");
 }
 
 document.getElementById('editor-form').addEventListener('input', (event) => {
+    var id = event.target.getAttribute('id');
     //var fields = findKey(workingResume.content,event.target.getAttribute('id'),"");
     workingResume=setNestedPropertyValue(workingResume,paths[workingResume.content,event.target.getAttribute('id')],event.target.value);
     //changed.setNestedPropertyValue
+    changed[id]=true;
 
     UpdateResume();
     
@@ -232,3 +261,77 @@ function blob_test() {
   data.append("upfile", new Blob(["CONTENT"], {type: "text/plain"}));
   fetch("SERVER.SCRIPT", { method: "POST", body: data });
   */
+
+
+
+const addEducation =()=>{
+    //add new blank education
+    workingResume=setNestedPropertyValue(workingResume,paths["educationContent"],Education());
+    var id=getUniqueId("education");
+
+    var prevString = Components.EducationPreview(getNestedPropertyValue(workingResume,"content.educationContent"), id);
+    var formString =         `
+    <div id="education`+ id + `">
+        <textarea class="form-control" aria-label="" placeholder="Write here..." ></textarea> 
+
+        <button onclick="removeEducation(`+id+`)" type="button"  >Remove education</button>
+    </div>`
+
+    //document.getElementById("preview_educationContent").insertAdjacentHTML("beforeend",prevString);
+    //document.getElementById("education").insertAdjacentHTML("beforeend",formString);
+    var ta = document.createElement("textarea");
+    ta.setAttribute("class","form-control");
+    var but = document.createElement("button");
+    but.onclick="removeEducation("+id+")";
+    but.setAttribute("type","button");
+    but.textContent="Remove education";
+    document.getElementById("education").appendChild(ta);
+    document.getElementById("education").appendChild(but);
+    //document.getElementById("preview_educationContent").appendChild(
+     //   ta, but
+
+    //);
+    
+    //var but = document.createElement("button");
+    //but.onclick = (()=>{removeEducation(id)}\\\
+    UpdateResume();
+}
+//window.addEducation = addEducation;
+document.getElementById("addEducation").onclick=addEducation;
+
+
+const addExperience =() =>{
+    //add new blank experience
+    workingResume=setNestedPropertyValue(workingResume,paths["experienceContent"],Experience());
+    var id=getUniqueId("experience");
+
+    var prevString = Components.ExperiencePreview(getNestedPropertyValue(workingResume,"content.experienceContent"), id);
+    var formString = `
+    <div id="experience`+ id + `">
+        <textarea class="form-control" aria-label="" placeholder="Write here..." ></textarea> 
+
+       
+        <button type="button" onclick="removeEducation(`+id+`)">Remove experience</button>
+    </div>
+`
+    document.getElementById("preview_experienceContent").insertAdjacentHTML("beforeend",prevString);
+    document.getElementById("experience").insertAdjacentHTML("beforeend",formString);
+    //var but = document.createElement("button");
+    //but.onclick=(()=>{removeExperience(id)});\
+    UpdateResume();
+}
+
+document.getElementById("addExperience").onclick=addExperience;
+
+
+
+
+
+function getUniqueId(prefix) {
+    var i = 0;
+    console.log(prefix+i);
+    while(document.getElementById(prefix+i)!=null) {
+        i++;
+    }
+    return i;
+}
