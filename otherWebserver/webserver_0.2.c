@@ -8,13 +8,12 @@
 #include <pthread.h>
 #include <signal.h>
 #include <poll.h>
-#include <sys/stat.h>
 
 #define DEFAULT_PORT 10074
 #define MAX_CONNECTIONS 12
 #define MAX_REQUEST_SIZE 8192
 #define SEGMENT_SIZE 0x100
-#define MAX_LOAD_TIME 500
+#define MAX_LOAD_TIME 1000
 
 // Credit to Dr. Brian Stuart's chat server example
 // For this Client struct technique
@@ -47,15 +46,15 @@ int main(int argc, char **argv)
 		snprintf(rootDir, 256, "%s", ".");
 		break;
 	case 2:
-		// accept directory with or without tail
-		// forward slash
+		//accept directory with or without tail 
+		//forward slash
 		if (argv[1][strlen(argv[1]) - 1] == '/')
 		{
 			argv[1][strlen(argv[1]) - 1] = '\0';
 		}
 
 		snprintf(rootDir, 256, "%s%s", "", argv[1]);
-		printf("Root: %s\n", rootDir);
+		printf("%s\n", rootDir);
 		break;
 	default:
 		printf("Ignoring extra arguments.\n");
@@ -95,7 +94,7 @@ int main(int argc, char **argv)
 
 	while (1)
 	{
-		if (listen(sock, SOMAXCONN) < 0)
+		if (listen(sock, MAX_CONNECTIONS) < 0)
 		{
 			perror("Listen");
 			terminate(3);
@@ -147,9 +146,9 @@ void *handle_request(void *cli)
 
 		char segment[SEGMENT_SIZE] = {0};
 		segmentSize = recv(client->acceptedSock, &segment, SEGMENT_SIZE, 0);
-
-		// strcat(request, segment);
-		memcpy(&request[requestSize], segment, segmentSize);
+		
+		//strcat(request, segment);
+		memcpy(&request[requestSize],segment,segmentSize);
 		requestSize += segmentSize;
 	}
 
@@ -189,20 +188,15 @@ void *handle_request(void *cli)
 
 		char dir[256] = {0};
 		strcpy(dir, rootDir);
-		strcat(dir, parsedRequest[1]);
-		/*
-		struct stat path_stat;
-		stat(dir, &path_stat);
-		int s = S_ISDIR(path_stat.st_mode);
-		if(s==0) { //check if file is directory
-		printf("%i -> %s\n", s,dir);
-			strcat(dir, "/");
-		}
-		*/
 
-		if (dir[strlen(dir) - 1] == '/')
+		if (parsedRequest[1][strlen(parsedRequest[1]) - 1] == '/')
 		{
+			strcat(dir, parsedRequest[1]);
 			strcat(dir, "index.html");
+		}
+		else
+		{
+			strcat(dir, parsedRequest[1]);
 		}
 
 		char *response = malloc(0);
@@ -210,30 +204,14 @@ void *handle_request(void *cli)
 
 		printf("File: %s\n", dir);
 
-		FILE *file = fopen(dir, "r+");
-
+		FILE *file = fopen(dir, "r");
 
 		if (file != NULL)
 		{
-			response = realloc(response, 18);
-			bzero(response, 18);
-			strcpy(response, "HTTP/1.1 200 OK\n");
+			response=realloc(response,18);
+			bzero(response,18);
+			strcat(response, "HTTP/1.1 200 OK\n\n");
 			responseSize = strlen(response) + 1;
-
-
-			//specify content type using extension
-			char extension[32] = {0};
-			strcpy(extension, strrchr(dir,'.')+1);
-			printf("Extension: %s\n",extension);
-
-			if(strcmp(extension,"js")==0) {
-				responseSize+=38-1;
-				response=realloc(response,responseSize);
-				strcat(response,"Content-Type: application/javascript\n");
-			}
-
-			response=realloc(response,++responseSize);
-			strcat(response,"\n");
 
 			if (fseek(file, 0, SEEK_END) < 0)
 			{
@@ -241,29 +219,34 @@ void *handle_request(void *cli)
 			}
 
 			int fileSize = ftell(file);
+
 			rewind(file);
-			
-			char *buffer = malloc(fileSize+1);
-			bzero(buffer, fileSize+1);
+			printf("%i %i\n",responseSize, fileSize);
+			char *buffer = malloc(fileSize);
+			bzero(buffer,fileSize);
 			int bufsize = fread(buffer, 1, fileSize, file);
-			responseSize += bufsize;
-			response = realloc(response, responseSize);
-			bzero(&response[responseSize-bufsize-1], bufsize+1);
-			memcpy(&response[responseSize-bufsize-1], buffer, bufsize+1);
+			responseSize+=bufsize;
+			response=realloc(response,responseSize+bufsize);
+			bzero(&response[responseSize],bufsize);
+			
+			printf("he??\n");
+			memcpy(&response[responseSize],buffer,bufsize);
+			responseSize+=bufsize;
+			printf("what about here??\n");
 			free(buffer);
 			fclose(file);
 		}
 		else
-		{
+		{	
 			printf("\033[0;31mCan't find file.\033[0;37m\n");
-			response = realloc(response, 25);
-			bzero(response, 25);
-			strcpy(response, "HTTP/1.1 404 Not Found\n\n");
+			response=realloc(response,25);
+			bzero(response,25);
+			strcat(response, "HTTP/1.1 404 Not Found\n\n");
 		}
 
 		printf("\n\033[1;34mResponse:\n\033[0;37m%s", response);
 
-		if (send(client->acceptedSock, response, responseSize-1, 0) < 0)
+		if (send(client->acceptedSock, response, responseSize, 0) < 0)
 		{
 			perror("Send");
 			terminate(8);
@@ -274,7 +257,6 @@ void *handle_request(void *cli)
 		printf("\n\033[1;32mFinished.\033[0;37m\n");
 	}
 
-	pthread_cancel(client->thread);
 	if (client->prev != NULL)
 		client->prev->next = client->next;
 	if (client->next != NULL)
@@ -282,7 +264,6 @@ void *handle_request(void *cli)
 
 	shutdown(client->acceptedSock, SHUT_RDWR);
 	free(client);
-	
 	fflush(stdin);
 }
 

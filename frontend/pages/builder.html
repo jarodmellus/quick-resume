@@ -102,44 +102,73 @@
                 </div>
 
                 <label for="experience">Experience</label>
-                <div id="experience">
+                <div id="experience" >
+                   
+                    <div id="experienceTemplate" class="experienceBlock" style="visibility:hidden; display:none;">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control experience job_title" placeholder="Job Title"></input>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control experience company" placeholder="Company"></input>
+                            </div>
+                        </div>
+                        <div class="form-row">
+		                    <div class="form-group col-md-6">
+		                        <input type="text" class="form-control experience city" placeholder="City"></input>
+		                    </div>
+		                    <div class="form-group col-md-6">
+		                        <input type="text" class="form-control experience state" placeholder="State"></input>
+		                    </div>
+		                </div>
+		                <div class="form-row">
+		                    <div class="form-group col-md-6">
+		                        <input type="text" class="form-control experience start_month" placeholder="Start Month"></input>
+		                    </div>
+		                    <div class="form-group col-md-6">
+		                        <input type="text" class="form-control experience start_year" placeholder="Start Year"></input>
+		                    </div>
+		                </div>
+		            	<div class="form-row">
+		                    <div class="form-group col-md-6">
+		                        <input type="text" class="form-control experience end_month" placeholder="End Month"></input>
+		                    </div>
+		                    <div class="form-group col-md-6">
+		                        <input type="text" class="form-control experience end_year" placeholder="End Year"></input>
+		                    </div>
+		                </div>
 
-                    <button type="button" id="addExperience" >Add another experience</button>
+                        <button type="button">Remove Experience</button>
+                    </div>
+                    
                 </div>
+                <button type="button"  onClick="addExperience()" style="display:block">Add another experience</button>
 
                 <label for="education">Education</label>
-                <div id="education" class="form-row">
-                    <div class="form-row">
-                        <div class="form-group col-md-11">
-                           
-                            <input type="text" class="form-control"  id="school" placeholder="School Name"></textarea>
-                        </div>
-                        <div class="form-group col-md-2">
-    
-                            <input type="text" class="form-control " id="gpa" placeholder="GPA"></textarea>
-                        </div>
 
-                    </div>
-                    <div class="form-group col-md-4">
+                <div id="education" class="form-row">
+                    <div id="educationTemplate" class="educationBlock" style="visibility:hidden; display:none">
+                        <div class="form-group col-md-4">
+                        
+                        <input type="text" class="form-control education school_state"></textarea>
+                        </div>
                        
-                        <input type="text" class="form-control " id="school_state"></textarea>
-                    </div>
-                       
-                        <input type="text" class="form-control" id="school_city"></textarea>
+                        <input type="text" class="form-control education school_city"></textarea>
                     
                         <label for="school_month_start">Start Month</label>
-                        <input type="text" class="form-control " id="school_month_start"></textarea>
+                        <input type="text" class="form-control education school_month_start"></textarea>
                         <label for="school_year_start">Start Year</label>
-                        <input type="text" class="form-control " id="school_year_start"></textarea>
+                        <input type="text" class="form-control education school_year_start"></textarea>
                         <label for="school_month_start">End Month</label>
-                        <input type="text" class="form-control " id="school_month_start"></textarea>
+                        <input type="text" class="form-control education school_month_start"></textarea>
                         <label for="school_year_start">End Year</label>
-                        <input type="text" class="form-control" id="school_year_start"></textarea>
+                        <input type="text" class="form-control education school_year_start"></textarea>
                    
-                   
-
-                    <!--<button type="button" id="addEducation" >Add another education</button>-->
+                   		<button type="button">Remove Education</button>
+                    </div>
+                    
                 </div>
+                <button type="button" onClick="addEducation()" style="display:block">Add Education</button>
 
                 <label for="skills">Skills</label>
                 <div id="skills">
@@ -186,11 +215,33 @@
                 <p id="preview_objectiveContent"></p>
                 </p>
                 <h2>Experiences</h2>
-                <div id="preview_experienceContent">
-                    
+                <div id="preview_experience">
+		            <div id="preview_experience_template" style="display:none;visibility:hidden;">
+		            	<div class = "job_title"></div>
+		            	<div class = "company"></div>
+		            	<div class = "start_month"></div>
+		            	<div class = "start_year"></div>
+		            	<div class = "end_month"></div>
+		            	<div class = "end_year"></div>
+		            	<div class = "city"></div>
+		            	<div class = "state"></div>
+		            	<div class = "responsiblities"></div>
+		            </div>
+		                
                 </div>
                 <h2>Education</h2>
-                <div id="preview_educationContent"></div>
+                <div id="preview_education"></div>
+		            <div id="preview_education_template" style="display:none;visibility:hidden;">
+		            	<div class = "school_name"></div>
+		            	<div class = "degrees"></div>
+		            	<div class = "start_month"></div>
+		            	<div class = "start_year"></div>
+		            	<div class = "end_month"></div>
+		            	<div class = "end_year"></div>
+		            	<div class = "city"></div>
+		            	<div class = "state"></div>
+		            	<div class = "gpa"></div>
+		            </div>
                 <h2>Skills</h2>
                 <div id="preview_skillsContent"></div>
                 <h2>Awards</h2>
@@ -209,22 +260,6 @@
     <script type="module" src="../js/resume_data.js"></script>
     <script type="module" src="../js/resume_components.js"></script>
     <script type="module" src="../js/builder.js"></script>
-    <script>
-
-        function removeEducation(id){
-            var d = document.getElementById("education"+id);
-            //d.parentNode.removeChild(d);
-            
-            //d.htmlElement.style.visibility = "hidden";
-        }
-        
-        function removeExperience(id){
-            var d = document.getElementById("experience"+id);
-            //d.parentNode.removeChild(d);
-            
-            //d.htmlElement.style.visibility = "hidden";
-        }
-    </script> 
 
   </body>
 

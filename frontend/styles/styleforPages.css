@@ -71,7 +71,7 @@ html {
     height: 90%; 
     aspect-ratio: 1/1.4142;
     background-color:white;
-    font-size: .6rem;
+    font-size: .9vw;
 }
 
 #preview_text {
@@ -104,7 +104,7 @@ html {
 }
 
 #preview h2 {
-    font-size: .8rem;
+    font-size: 1.3vw;
     margin: 0;
     font-weight: bold;
 }
@@ -115,7 +115,8 @@ html {
 
 #preview_name {
     text-align: left;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
+    font-size: 2vw;
 }
 
